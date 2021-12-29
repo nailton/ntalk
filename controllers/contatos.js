@@ -2,7 +2,7 @@ module.exports = (app) => {
   const ContatosController = {
     index(req, res) {
       const { usuario } = req.session;
-      const { contatos } = req.usuario;
+      const { contatos } = usuario;
       res.render('contatos/index', { usuario, contatos });
     },
     create(req, res) {

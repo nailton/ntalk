@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <% contatos.forEach((contatos, index)=> { %>
+        <% contatos.forEach((contato, index)=> { %>
           <tr>
             <td>
               <%- contato.nome %>
@@ -27,7 +27,7 @@
             <td>
               <%- contato.email %>
             </td>
-            <td><a href="/contatos/<%- index %> ">Detalhes</a></td>
+            <td><a href="/contato/<%- index %> ">Detalhes</a></td>
           </tr>
           <% }) %>
       </tbody>
