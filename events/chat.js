@@ -1,7 +1,10 @@
 module.exports = (app, io) => {
   io.on('connection', (client) => {
-    client.on('send-server', (data) => {
-      const resposta = `<b>${data.nome}:</b> ${data.msg}<br>`;
+    const { session } = client.handshake;
+    const { usuario } = session;
+
+    client.on('send-server', (msg) => {
+      const resposta = `<b>${usuario.nome}:</b> ${msg}<br>`;
       client.emit('send-client', resposta);
       client.broadcast.emit('send-client', resposta);
     });

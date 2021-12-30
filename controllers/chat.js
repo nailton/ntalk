@@ -1,8 +1,7 @@
 module.exports = (app) => {
   const ChatController = {
     index(req, res) {
-      const { usuario } = req.session;
-      res.render('chat/index', { usuario });
+      res.render('chat/index');
     }
   };
   return ChatController;
