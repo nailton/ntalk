@@ -40,7 +40,7 @@ io.on('connection', (client) => {
 app.use(error.notFound);
 app.use(error.serverError)
 
-app.listen(3000, () => {
+server.listen(3000, () => {
   console.log('Ntalk no ar!');
 });
 

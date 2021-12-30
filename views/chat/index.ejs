@@ -1,9 +1,8 @@
 <%- include('../header'); %>
 
-  <script src="socket.io/socket.io.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
 
   <script>
-    console.log(io());
     const socket = io();
     socket.on('send-client', (msg) => {
       document.getElementById('chat').innerHTML += msg;
@@ -28,5 +27,5 @@
     <button onclick="enviar();">Enviar</button>
   </section>
 
-  <%- include('../exit'); %> 
-  <%- include('../footer'); %> 
+  <%- include('../exit'); %>
+    <%- include('../footer'); %>
