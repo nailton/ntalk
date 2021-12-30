@@ -4,7 +4,7 @@ const http = require('http');
 const socketIO = require('socket.io');
 const consign = require('consign');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+const cookie = require('cookie');
 const expressSession = require('express-session');
 const methodOverride = require('method-override');
 const config = require('./config');
@@ -18,7 +18,6 @@ const store = new expressSession.MemoryStore();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use(cookieParser('ntalk'));
 app.use(expressSession({ 
   store,
   name: config.sessionKey,
@@ -30,7 +29,7 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.use((socket, next) => {
-  const cookieData = socket.request.header.cookie;
+  const cookieData = socket.request.headers.cookie;
   const cookieObj = cookie.parse(cookieData);
   const sessionHash = cookieObj[config.sessionKey] || '';
   const sessionID = sessionHash.split('.')[0].slice(2);
