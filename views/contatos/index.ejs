@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <% contatos.forEach((contato, index)=> { %>
+        <% contatos.forEach(function(contato, index) { %>
           <tr>
             <td>
               <%- contato.nome %>
@@ -28,12 +28,13 @@
               <%- contato.email %>
             </td>
             <td><a href="/contato/<%- index %> ">Detalhes</a></td>
-            <td><a href="/chat">Conversar</a></td>
+            <td><a href="/chat" id="chat_<%- contato.email %>">Conversar</a></td>
           </tr>
           <% }) %>
       </tbody>
     </table>
   </section>
 
+  <%- include('notify_script'); %> 
   <%- include('../exit'); %>
   <%- include('../footer'); %>

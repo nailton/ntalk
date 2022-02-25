@@ -4,13 +4,15 @@
 
   <script>
     const socket = io();
+    const sala = '<%- sala %>';
+    socket.emit('create-room', sala);
     socket.on('send-client', (msg) => {
       document.getElementById('chat').innerHTML += msg;
     });
 
     const enviar = () => {
       const msg = document.getElementById('msg').value;
-      socket.emit('send-server', msg);
+      socket.emit('send-server', sala, msg);
     };
   </script>
 
@@ -26,4 +28,4 @@
   </section>
 
   <%- include('../exit'); %>
-    <%- include('../footer'); %>
+  <%- include('../footer'); %>
