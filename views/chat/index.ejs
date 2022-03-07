@@ -7,12 +7,13 @@
     const sala = '<%- sala %>';
     socket.emit('create-room', sala);
     socket.on('send-client', (msg) => {
+      console.log('msg', msg)
       document.getElementById('chat').innerHTML += msg;
     });
 
     const enviar = () => {
-      const msg = document.getElementById('msg').value;
-      socket.emit('send-server', sala, msg);
+      const msg = document.getElementById('msg');
+      socket.emit('send-server', sala, msg.value);
     };
   </script>
 

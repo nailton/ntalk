@@ -1,5 +1,5 @@
 <%- include('../header'); %>
-  <header>
+  <header> 
     <h2>Ntalk - Agenda de contatos</h2>
   </header>
 
@@ -26,6 +26,9 @@
             </td>
             <td>
               <%- contato.email %>
+            </td>
+            <td>
+              <span id="notify_<%- contato.email %>">Offline</span>
             </td>
             <td><a href="/contato/<%- index %> ">Detalhes</a></td>
             <td><a href="/chat" id="chat_<%- contato.email %>">Conversar</a></td>

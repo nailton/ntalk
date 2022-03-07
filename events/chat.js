@@ -1,7 +1,14 @@
-module.exports = (app, io) => {
+module.exports = (app, io) => { 
+  const onlines = {}; 
   io.on('connection', (client) => {
     const { session } = client.handshake;
     const { usuario } = session;
+
+    onlines[usuario.email] = usuario.email;
+    for (const email in onlines) {
+      client.emit('notify-onlines', email);
+      client.broadcast.emit('notify-onlines', email);
+    }
 
     client.on('send-server', (hashDaSala, msg) => {
       const novaMensagem = { email: usuario.email, sala: hashDaSala};
