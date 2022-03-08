@@ -7,9 +7,9 @@ module.exports = (app) => {
     async index(req, res) {
       try {
         const id = ObjectId(req.session.usuario._id);
-        const { usuario } = req.session;
+        const { usuario } = await Usuario.findById(id);
         const { contatos } = usuario;
-        res.render('contatos/index', { usuario, contatos });
+        res.render('contatos/index', { usuario });
       } catch {
         res.redirect('/');
       }
@@ -18,8 +18,9 @@ module.exports = (app) => {
     async create(req, res) {
       try {
         const { contato } = req.body;
-        const { usuario } = req.session;
-        usuario.contatos.push(contato);
+        const id = ObjectId(req.session.usuario._id);
+        const set = { $push: { contatos: contato } };
+        await Usuario.findByIdAndUpdate(id, set);
         res.redirect('/contatos');
       } catch {
         res.redirect('/');
@@ -29,7 +30,7 @@ module.exports = (app) => {
       try {
         const id = ObjectId(req.session.usuario._id);
         const contatoId = ObjectId(req.params.id);
-        const { usuario } = await Usuario.findById(id);
+        const usuario = await Usuario.findById(id);
         const { contatos } = usuario;
         const contato = contatos.find((ct) => {
           return ct._id.toString() === contatoId.toString();
@@ -48,7 +49,7 @@ module.exports = (app) => {
         const contato = contatos.find((ct) => {
           return ct._id.toString() === contatoId.toString();
         });
-        res.render('contatos/edit', { id, contato, usuario });
+        res.render('contatos/edit', { contato, usuario });
       } catch {
         res.redirect('/');
       }
