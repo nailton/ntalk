@@ -1,40 +1,82 @@
-module.exports = (app) => {
-  const ContatosController = {
-    index(req, res) {
-      const { usuario } = req.session;
-      const { contatos } = usuario;
-      res.render('contatos/index', { usuario, contatos });
-    },
-    create(req, res) {
-      const { contato } = req.body;
-      const { usuario } = req.session;
-      usuario.contatos.push(contato);
-      res.redirect('/contatos');
-    },
-    show(req, res) {
-      const { id } = req.params;
-      const { usuario } = req.session;
-      const contato = usuario.contatos[id];
-      res.render('contatos/show', { id, contato })
-    },
-    edit(req, res) {
-      const { id } = req.params;
-      const { usuario } = req.session;
-      const contato = usuario.contatos[id];
-      res.render('contatos/edit', { id, contato, usuario });
-    },
-    update(req, res) {
-      const { contato } = req.body;
-      const { usuario } = req.session;
-      usuario.contatos[req.params.id] = contato;
-      res.redirect('/contatos');
-    },
-    destroy(req, res) {
-      const { id } = req.params;
-      const { usuario } = req.session;
-      usuario.contatos.splice(id, 1);
-      res.redirect('/contatos');
+const { Types: { ObjectId } } = require('mongoose');
 
+module.exports = (app) => {
+  const Usuario = app.models.usuario;
+
+  const ContatosController = {
+    async index(req, res) {
+      try {
+        const id = ObjectId(req.session.usuario._id);
+        const { usuario } = req.session;
+        const { contatos } = usuario;
+        res.render('contatos/index', { usuario, contatos });
+      } catch {
+        res.redirect('/');
+      }
+
+    },
+    async create(req, res) {
+      try {
+        const { contato } = req.body;
+        const { usuario } = req.session;
+        usuario.contatos.push(contato);
+        res.redirect('/contatos');
+      } catch {
+        res.redirect('/');
+      }
+    },
+    async show(req, res) {
+      try {
+        const id = ObjectId(req.session.usuario._id);
+        const contatoId = ObjectId(req.params.id);
+        const { usuario } = await Usuario.findById(id);
+        const { contatos } = usuario;
+        const contato = contatos.find((ct) => {
+          return ct._id.toString() === contatoId.toString();
+        });
+        res.render('contatos/show', { contato });
+      } catch {
+        res.redirect('/');
+      }
+    },
+    async edit(req, res) {
+      try {
+        const id = ObjectId(req.session.usuario._id);
+        const contatoId = ObjectId(req.params.id);
+        const usuario = await Usuario.findById(id);
+        const { contatos } = usuario;
+        const contato = contatos.find((ct) => {
+          return ct._id.toString() === contatoId.toString();
+        });
+        res.render('contatos/edit', { id, contato, usuario });
+      } catch {
+        res.redirect('/');
+      }
+    },
+    async update(req, res) {
+      try {
+        const contatoId = ObjectId(req.params.id);
+        const usuarioId = ObjectId(req.session.usuario._id);
+        const { contato } = req.body;
+        const where = { _id: usuarioId, 'contatos._id': contatoId };
+        const set = { $set: { 'contatos.$': contato } };
+        await Usuario.updateOne(where, set);
+        res.redirect('/contatos');
+      } catch {
+        res.redirect('/');
+      }
+    },
+    async destroy(req, res) {
+      try {
+        const contatoId = ObjectId(req.params.id);
+        const usuarioId = ObjectId(req.session.usuario._id);
+        const where = { _id: usuarioId };
+        const set = { $pull: { contatos: { _id: contatoId } } };
+        await Usuario.update(where, set);
+        res.redirect('/contatos');
+      } catch {
+        res.redirect('/');
+      }
     }
   };
   return ContatosController;
