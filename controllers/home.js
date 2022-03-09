@@ -20,10 +20,9 @@ module.exports = (app) => {
       };
 
       try {
-        const usuario = Usuario.findOneAndUpdate(where, set, options).select('email nome').then((usuario) => {
-          req.session.usuario = usuario;
-          res.redirect('/contatos');
-        });
+        const usuario = await Usuario.findOneAndUpdate(where, set, options).select('email nome');
+        req.session.usuario = usuario;
+        res.redirect('/contatos');
       } catch {
         res.redirect('/')
       }

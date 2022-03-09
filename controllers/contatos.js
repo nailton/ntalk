@@ -7,7 +7,7 @@ module.exports = (app) => {
     async index(req, res) {
       try {
         const id = ObjectId(req.session.usuario._id);
-        const { usuario } = await Usuario.findById(id);
+        const usuario  = await Usuario.findById(id);
         const { contatos } = usuario;
         res.render('contatos/index', { usuario });
       } catch {
